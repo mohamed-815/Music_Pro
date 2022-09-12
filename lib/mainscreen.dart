@@ -4,13 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1stproject/detailsong.dart';
 
 import 'package:flutter_application_1stproject/funtion.dart';
+import 'package:flutter_application_1stproject/play%20list/Recent.dart';
 import 'package:flutter_application_1stproject/play%20list/addplaylist.dart';
 import 'package:flutter_application_1stproject/play%20list/favorite.dart';
-import 'package:flutter_application_1stproject/recent.dart';
 
 import 'package:flutter_application_1stproject/settings.dart';
 import 'package:flutter_application_1stproject/songsarrey.dart';
 import 'package:flutter_application_1stproject/widjet1/allsongs.dart';
+import 'package:flutter_application_1stproject/widjet1/draw.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -33,56 +34,58 @@ class _MainScreenState extends State<MainScreen> {
 
     return SafeArea(
       child: Scaffold(
+          drawer: Drawer1(),
           backgroundColor: Color(0xFF52796F),
-          body: Column(
-            children: [
-              ListTile(
-                leading: GestureDetector(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: ((context) => Settings()))),
-                  child: Icon(
-                    Icons.menu,
-                    size: 30,
-                    color: Colors.white,
+          body: Builder(builder: (context) {
+            return Column(
+              children: [
+                ListTile(
+                  leading: GestureDetector(
+                    onTap: () => Scaffold.of(context).openDrawer(),
+                    child: Icon(
+                      Icons.menu,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: CircleAvatar(
+                    backgroundColor: Colors.white.withOpacity(.1),
+                    child: Center(
+                        child: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 18,
+                    )),
                   ),
                 ),
-                trailing: CircleAvatar(
-                  backgroundColor: Colors.white.withOpacity(.1),
-                  child: Center(
-                      child: Icon(
-                    Icons.search,
-                    color: Colors.white,
-                    size: 18,
-                  )),
+                Flexible(
+                  flex: 3,
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 8.0,
+                    children: List.generate(
+                        SongList.length,
+                        (index) => Center(
+                              child: PlayListCards(
+                                songlistinorder: SongList[index],
+                              ),
+                            )),
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: 3,
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 8.0,
-                  children: List.generate(
-                      SongList.length,
-                      (index) => Center(
-                            child: PlayListCards(
-                              songlistinorder: SongList[index],
-                            ),
-                          )),
+                SizedBox(
+                  height: screenheight / 50,
                 ),
-              ),
-              SizedBox(
-                height: screenheight / 50,
-              ),
-              Text(
-                'All Songs',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              AllSongs(),
-            ],
-          )),
+                Text(
+                  'All Songs',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                AllSongs1(),
+              ],
+            );
+          })),
     );
   }
 }
@@ -101,17 +104,17 @@ class _PlayListCardsState extends State<PlayListCards> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.songlistinorder.title != 'Play List') {
+        if (widget.songlistinorder.title == 'Favorite') {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: ((context) => Favorites(
-                      playlisttype: widget.songlistinorder,
-                    ))),
+            MaterialPageRoute(builder: ((context) => Favorites())),
           );
-        } else {
+        } else if (widget.songlistinorder.title == 'Play List') {
           Navigator.push(context,
               MaterialPageRoute(builder: ((context) => AddPlayList())));
+        } else if (widget.songlistinorder.title == 'Recent') {
+          Navigator.push(
+              context, MaterialPageRoute(builder: ((context) => Recent1())));
         }
       },
       child: Container(

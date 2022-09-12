@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1stproject/db/allsongstoringclass.dart';
+import 'package:flutter_application_1stproject/db/dbfetching.dart';
 import 'package:flutter_application_1stproject/funtion.dart';
 import 'package:flutter_application_1stproject/funtion.dart';
 import 'package:flutter_application_1stproject/funtion.dart';
@@ -13,18 +15,22 @@ import 'package:flutter_application_1stproject/funtion.dart';
 import 'package:flutter_application_1stproject/mainscreen.dart';
 import 'package:flutter_application_1stproject/songsarrey.dart';
 
+import 'package:on_audio_query/on_audio_query.dart';
+
 import 'funtion.dart';
 
 class DetailSong extends StatefulWidget {
-  final Audio? songdetailsshow;
+  final AllSongs? songdetailsshow;
   final AssetsAudioPlayer audioPlayer;
   int? index;
+  final AsyncSnapshot<List<SongModel>>? item;
 
   DetailSong(
       {Key? key,
       this.songdetailsshow,
       required this.index,
-      required this.audioPlayer})
+      required this.audioPlayer,
+      this.item})
       : super(key: key);
 
   @override
@@ -36,6 +42,8 @@ class _DetailSongState extends State<DetailSong> {
   bool isplay = true;
   bool isfavorite = false;
   int count = 1;
+  int count1 = 1;
+  int count2 = 1;
   @override
   void initState() {
     if (widget.songdetailsshow == null) {
@@ -61,6 +69,13 @@ class _DetailSongState extends State<DetailSong> {
     widget.audioPlayer.play();
   }
 
+ Stream<PositionData> get _positionDataStream =>
+      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+          audioplayer.positionStream,
+          audioplayer.bufferedPositionStream,
+          audioplayer.durationStream,
+          (position, bufferedPosition, duration) => PositionData(
+              position, bufferedPosition, duration ?? Duration.zero));
   @override
   Widget build(BuildContext context) {
     final double screenhight = MediaQuery.of(context).size.height;
@@ -110,11 +125,11 @@ class _DetailSongState extends State<DetailSong> {
           ),
           widget.songdetailsshow == null
               ? Text(
-                  songarrey1[widget.index!].metas.title!,
+                  dbsongs![widget.index!].title!,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 )
               : Text(
-                  widget.songdetailsshow!.metas.title!,
+                  widget.songdetailsshow!.title!,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
           widget.songdetailsshow == null
@@ -123,7 +138,7 @@ class _DetailSongState extends State<DetailSong> {
                   style: TextStyle(fontSize: 12, color: Colors.white),
                 )
               : Text(
-                  widget.songdetailsshow!.metas.artist!,
+                  widget.songdetailsshow!.artist!,
                   style: TextStyle(color: Colors.white),
                 ),
           // Container(
@@ -139,27 +154,27 @@ class _DetailSongState extends State<DetailSong> {
           SizedBox(
             height: screenhight / 50,
           ),
-          Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: widget.audioPlayer.builderRealtimePlayingInfos(
-                  builder: (context, infos) {
-                Duration currentposition = infos.currentPosition;
-                Duration totalduration = infos.duration;
-                return ProgressBar(
-                    timeLabelTextStyle:
-                        TextStyle(color: Colors.white, fontSize: 16),
-                    thumbColor: Color.fromARGB(255, 64, 82, 68),
-                    baseBarColor: Color.fromARGB(255, 127, 126, 126),
-                    progressBarColor: Color.fromARGB(255, 86, 110, 91),
-                    bufferedBarColor: Color.fromARGB(255, 123, 157, 131),
-                    thumbRadius: 8,
-                    barHeight: 3,
-                    progress: currentposition,
-                    total: totalduration,
-                    onSeek: (to) {
-                      audioplayer.seek(to);
-                    });
-              })),
+          // Container(
+          //     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          //     child: widget.audioPlayer.builderRealtimePlayingInfos(
+          //         builder: (context, infos) {
+          //       Duration currentposition = infos.currentPosition;
+          //       Duration totalduration = infos.duration;
+          //       return ProgressBar(
+          //           timeLabelTextStyle:
+          //               TextStyle(color: Colors.white, fontSize: 16),
+          //           thumbColor: Color.fromARGB(255, 64, 82, 68),
+          //           baseBarColor: Color.fromARGB(255, 127, 126, 126),
+          //           progressBarColor: Color.fromARGB(255, 86, 110, 91),
+          //           bufferedBarColor: Color.fromARGB(255, 123, 157, 131),
+          //           thumbRadius: 8,
+          //           barHeight: 3,
+          //           progress: currentposition,
+          //           total: totalduration,
+          //           onSeek: (to) {
+          //             audioplayer.seek(to);
+          //           });
+          //     })),
           SizedBox(
             height: screenhight / 25,
           ),
@@ -199,16 +214,19 @@ class _DetailSongState extends State<DetailSong> {
                 onDoubleTap: () async {
                   await audioplayer.seekBy(Duration(seconds: -5));
                 },
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => widget.index! - count >= 0
-                            ? DetailSong(
-                                songdetailsshow:
-                                    songarrey1[widget.index! - count],
-                                index: widget.index,
-                                audioPlayer: widget.audioPlayer)
-                            : MainScreen()))),
+                onTap: () {
+                  count2++;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => widget.index! > 0
+                              ? DetailSong(
+                                  songdetailsshow:
+                                      dbsongs![widget.index! - 1],
+                                  index: widget.index! - 1,
+                                  audioPlayer: widget.audioPlayer)
+                              : MainScreen())));
+                },
                 child: Icon(
                   Icons.skip_previous,
                   size: 30,
@@ -251,22 +269,34 @@ class _DetailSongState extends State<DetailSong> {
                   onDoubleTap: () async {
                     await audioplayer.seekBy(Duration(seconds: 5));
                   },
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) =>
-                              widget.index! + count <= songarrey1.length - 1
-                                  ? DetailSong(
-                                      songdetailsshow:
-                                          songarrey1[widget.index! + count],
-                                      index: widget.index,
-                                      audioPlayer: widget.audioPlayer)
-                                  : MainScreen()))),
-                  child: Icon(Icons.skip_next, size: 30))
+                  onTap: () {
+                    count1++;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) =>
+                                widget.index! < dbsongs!.length - 1
+                                    ? DetailSong(
+                                        songdetailsshow:
+                                            dbsongs![widget.index! + 1],
+                                        index: widget.index! + 1,
+                                        audioPlayer: widget.audioPlayer)
+                                    : MainScreen())));
+                  },
+                  child: Icon(Icons.skip_next, size: 30)),
             ],
           ),
         ],
       )),
     );
+  }
+
+  @override
+  void dispose() {
+    count1 = 1;
+    count2 = 1;
+
+    // TODO: implement dispose
+    super.dispose();
   }
 }

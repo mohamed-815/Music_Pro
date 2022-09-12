@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_application_1stproject/mainscreen.dart';
 
 class Settings extends StatelessWidget {
   Settings({Key? key}) : super(key: key);
@@ -11,6 +12,12 @@ class Settings extends StatelessWidget {
     final double screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: (() => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: ((context) => MainScreen())),
+                  (route) => false)),
+              icon: Icon(Icons.arrow_back)),
           title: Text('Settings'),
           backgroundColor: Color(0xFF2F3E46),
         ),

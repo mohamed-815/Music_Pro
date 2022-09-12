@@ -7,9 +7,9 @@ import 'package:flutter_application_1stproject/mainscreen.dart';
 import 'package:flutter_application_1stproject/songsarrey.dart';
 
 class AddPlayList extends StatelessWidget {
-  final Songs1? playlisttype;
-
-  const AddPlayList({Key? key, this.playlisttype}) : super(key: key);
+  const AddPlayList({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,10 @@ class AddPlayList extends StatelessWidget {
         children: [
           ListTile(
             leading: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: ((context) => MainScreen())),
+                  (route) => false),
               child: CircleAvatar(
                 backgroundColor: Colors.white.withOpacity(.1),
                 child: Center(

@@ -6,8 +6,8 @@ import 'package:flutter_application_1stproject/funtion.dart';
 import 'package:flutter_application_1stproject/mainscreen.dart';
 import 'package:flutter_application_1stproject/songsarrey.dart';
 
-class Favorites extends StatelessWidget {
-  const Favorites({
+class Recent1 extends StatelessWidget {
+  const Recent1({
     Key? key,
   }) : super(key: key);
 
@@ -50,7 +50,7 @@ class Favorites extends StatelessWidget {
                     image: DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage(
-                            'assets/Microphone-background-sound-waves-energy-Music.webp'))),
+                            'assets/female-rock-singers-of-the-2000s-and-2010s.jpg'))),
               ),
             ),
           ),
@@ -59,7 +59,7 @@ class Favorites extends StatelessWidget {
           ),
           Center(
             child: Text(
-              'Favorite',
+              'Recent',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 25,

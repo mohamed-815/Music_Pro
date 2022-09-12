@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1stproject/db/allsongstoringclass.dart';
 import 'package:flutter_application_1stproject/detailsong.dart';
 import 'package:flutter_application_1stproject/miniplayer.dart';
 
 import 'package:flutter_application_1stproject/spalashscreen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'mainscreen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(AllSongsAdapter());
+  await Hive.openBox<List>('db_totalsongs');
+
   runApp(MyApp());
 }
 

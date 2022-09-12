@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_application_1stproject/db/allsongstoringclass.dart';
+import 'package:flutter_application_1stproject/db/dbfetching.dart';
+import 'package:flutter_application_1stproject/funtion.dart';
 import 'package:flutter_application_1stproject/mainscreen.dart';
+import 'package:flutter_application_1stproject/widjet1/allsongs.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -12,6 +18,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   void initState() {
+    fetchSongs();
     GotoScreen();
     super.initState();
   }

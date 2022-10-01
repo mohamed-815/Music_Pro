@@ -13,6 +13,8 @@ class AllSongs1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenhight = MediaQuery.of(context).size.height;
+    final double screenwidth = MediaQuery.of(context).size.width;
     return Expanded(
         flex: 8,
         child: ListView.builder(
@@ -41,16 +43,25 @@ class AllSongs1 extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          dbsongs![index].title!,
-                          style: TextStyle(color: Colors.white),
+                        Container(
+                          width: 250,
+                          margin: EdgeInsets.only(right: 13),
+                          child: Text(
+                            audioconvertedsongs[index].metas.title!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                        Text(
-                          dbsongs![index].artist!,
-                          style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontFamily: 'Montserrat',
-                              fontSize: 13),
+                        Container(
+                          margin: EdgeInsets.only(right: 13),
+                          child: Text(
+                            audioconvertedsongs[index].metas.artist!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontFamily: 'Montserrat',
+                                fontSize: 13),
+                          ),
                         )
                       ],
                     ),

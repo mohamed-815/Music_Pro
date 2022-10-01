@@ -20,7 +20,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'funtion.dart';
 
 class DetailSong extends StatefulWidget {
-  final AllSongs? songdetailsshow;
+  final Audio? songdetailsshow;
   final AssetsAudioPlayer audioPlayer;
   int? index;
   final AsyncSnapshot<List<SongModel>>? item;
@@ -58,24 +58,19 @@ class _DetailSongState extends State<DetailSong> {
 
   Future<void> songPlayNow() async {
     await widget.audioPlayer
-        .open(songarrey1[widget.index!], showNotification: true);
+        .open(audioconvertedsongs[widget.index!], showNotification: true);
     widget.audioPlayer.play();
   }
 
   Future<void> songPlayNext() async {
-    await widget.audioPlayer
-        .open(widget.songdetailsshow!, showNotification: true);
+    //await widget.audioPlayer
+    //  .open(widget.songdetailsshow!, showNotification: true);
+
+    await widget.audioPlayer.open(Playlist(audios: audioconvertedsongs));
     count++;
     widget.audioPlayer.play();
   }
 
- Stream<PositionData> get _positionDataStream =>
-      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-          audioplayer.positionStream,
-          audioplayer.bufferedPositionStream,
-          audioplayer.durationStream,
-          (position, bufferedPosition, duration) => PositionData(
-              position, bufferedPosition, duration ?? Duration.zero));
   @override
   Widget build(BuildContext context) {
     final double screenhight = MediaQuery.of(context).size.height;
@@ -125,20 +120,20 @@ class _DetailSongState extends State<DetailSong> {
           ),
           widget.songdetailsshow == null
               ? Text(
-                  dbsongs![widget.index!].title!,
+                  audioconvertedsongs[widget.index!].metas.title!,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 )
               : Text(
-                  widget.songdetailsshow!.title!,
+                  widget.songdetailsshow!.metas.title!,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
           widget.songdetailsshow == null
               ? Text(
-                  songarrey1[widget.index!].metas.artist!,
+                  audioconvertedsongs[widget.index!].metas.artist!,
                   style: TextStyle(fontSize: 12, color: Colors.white),
                 )
               : Text(
-                  widget.songdetailsshow!.artist!,
+                  widget.songdetailsshow!.metas.artist!,
                   style: TextStyle(color: Colors.white),
                 ),
           // Container(
@@ -154,27 +149,27 @@ class _DetailSongState extends State<DetailSong> {
           SizedBox(
             height: screenhight / 50,
           ),
-          // Container(
-          //     margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          //     child: widget.audioPlayer.builderRealtimePlayingInfos(
-          //         builder: (context, infos) {
-          //       Duration currentposition = infos.currentPosition;
-          //       Duration totalduration = infos.duration;
-          //       return ProgressBar(
-          //           timeLabelTextStyle:
-          //               TextStyle(color: Colors.white, fontSize: 16),
-          //           thumbColor: Color.fromARGB(255, 64, 82, 68),
-          //           baseBarColor: Color.fromARGB(255, 127, 126, 126),
-          //           progressBarColor: Color.fromARGB(255, 86, 110, 91),
-          //           bufferedBarColor: Color.fromARGB(255, 123, 157, 131),
-          //           thumbRadius: 8,
-          //           barHeight: 3,
-          //           progress: currentposition,
-          //           total: totalduration,
-          //           onSeek: (to) {
-          //             audioplayer.seek(to);
-          //           });
-          //     })),
+          Container(
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: widget.audioPlayer.builderRealtimePlayingInfos(
+                  builder: (context, infos) {
+                Duration currentposition = infos.currentPosition;
+                Duration totalduration = infos.duration;
+                return ProgressBar(
+                    timeLabelTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 16),
+                    thumbColor: Color.fromARGB(255, 64, 82, 68),
+                    baseBarColor: Color.fromARGB(255, 127, 126, 126),
+                    progressBarColor: Color.fromARGB(255, 86, 110, 91),
+                    bufferedBarColor: Color.fromARGB(255, 123, 157, 131),
+                    thumbRadius: 8,
+                    barHeight: 3,
+                    progress: currentposition,
+                    total: totalduration,
+                    onSeek: (to) {
+                      audioplayer.seek(to);
+                    });
+              })),
           SizedBox(
             height: screenhight / 25,
           ),
@@ -222,7 +217,7 @@ class _DetailSongState extends State<DetailSong> {
                           builder: ((context) => widget.index! > 0
                               ? DetailSong(
                                   songdetailsshow:
-                                      dbsongs![widget.index! - 1],
+                                      audioconvertedsongs[widget.index! - 1],
                                   index: widget.index! - 1,
                                   audioPlayer: widget.audioPlayer)
                               : MainScreen())));
@@ -274,14 +269,14 @@ class _DetailSongState extends State<DetailSong> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) =>
-                                widget.index! < dbsongs!.length - 1
-                                    ? DetailSong(
-                                        songdetailsshow:
-                                            dbsongs![widget.index! + 1],
-                                        index: widget.index! + 1,
-                                        audioPlayer: widget.audioPlayer)
-                                    : MainScreen())));
+                            builder: ((context) => widget.index! <
+                                    audioconvertedsongs.length - 1
+                                ? DetailSong(
+                                    songdetailsshow:
+                                        audioconvertedsongs[widget.index! + 1],
+                                    index: widget.index! + 1,
+                                    audioPlayer: widget.audioPlayer)
+                                : MainScreen())));
                   },
                   child: Icon(Icons.skip_next, size: 30)),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1stproject/db/allsongstoringclass.dart';
+import 'package:flutter_application_1stproject/db/dbfetching.dart';
 import 'package:flutter_application_1stproject/detailsong.dart';
 import 'package:flutter_application_1stproject/miniplayer.dart';
 
@@ -13,7 +14,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AllSongsAdapter());
   await Hive.openBox<List>('db_totalsongs');
-
+  await fetchSongs();
   runApp(MyApp());
 }
 

@@ -1,5 +1,4 @@
-
-
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1stproject/mainscreen.dart';
@@ -7,7 +6,8 @@ import 'package:flutter_application_1stproject/songsarrey.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
- AudioPlayer audioplayer = AudioPlayer();
+
+AssetsAudioPlayer audioplayer = AssetsAudioPlayer();
 final audioquery = OnAudioQuery();
 
 class Songs1 {
